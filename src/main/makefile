@@ -1,10 +1,10 @@
 all:
-	gcc -c */*.c
+	gcc -c *.c
 
 main: all
-	gcc -o main main.o */*.o
+	gcc -o main *.o
 
-run:
+run: main
 	./main
 
 clean:
