@@ -1,17 +1,20 @@
 #include "database.h"
 #include "table.h"
+#include "engine.h"
 
 int main(int argc, char const *argv[])
 {
     struct Database* db =  database_init();
     printf("Database name: %s\n", db->name);
 
-    struct Table* table = get_table_from_index(db, 1);
-    printf("Table name: %s\n", table->name);
-    for (int i = 0; i < table->attr_count; i++) {
-        printf("Attr name %d: %s\n", i, table->attributes[i]->name);
-        printf("Attr size %d: %d\n", i, table->attributes[i]->size);
-        printf("Attr type %d: %d\n", i, table->attributes[i]->type);
-    }
+    // struct Table* table = get_table_from_index(db, 1);
+    // printf("Table name: %s\n", table->name);
+    // for (int i = 0; i < table->attr_count; i++) {
+    //     printf("Attr name %d: %s\n", i, table->attributes[i]->name);
+    //     printf("Attr size %d: %d\n", i, table->attributes[i]->size);
+    //     printf("Attr type %d: %d\n", i, table->attributes[i]->type);
+    // }
+
+    select(db, "users");
     return 0;
 }
