@@ -77,6 +77,7 @@ int16_t get_database_row_offset_id(FILE* database_main, int offset)
     fseek(database_main, offset, SEEK_SET);
     int16_t row_offset_id = 0;
     fread(&row_offset_id, sizeof(int16_t), 1, database_main);
+    // Convert big endian to little endian
     int16_t row_offset_id_big_to_little = (row_offset_id >> 8) | (row_offset_id << 8);
     return row_offset_id_big_to_little;
 }
