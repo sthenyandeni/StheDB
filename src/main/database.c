@@ -72,23 +72,33 @@ char* get_database_tff(FILE* database_main, int offset, int length)
     return tff;
 }
 
+int16_t get_database_row_offset_id(FILE* database_main, int offset)
+{
+    fseek(database_main, offset, SEEK_SET);
+    int16_t row_offset_id = 0;
+    fread(&row_offset_id, sizeof(int16_t), 1, database_main);
+    int16_t row_offset_id_big_to_little = (row_offset_id >> 8) | (row_offset_id << 8);
+    return row_offset_id_big_to_little;
+}
+
 struct Database* database_init(void)
 {
     FILE* database_main_read_only = fopen(MAIN_SDM, "r");
     struct Database* database = malloc(sizeof(struct Database));
     database->head = NULL;
     
+    // Get database length name and store name in database_name variable
     int8_t database_name_len = get_database_name_length(database_main_read_only, FILE_START_OFFSET);
     char* database_name = malloc(database_name_len);
     fread(database_name, 1, database_name_len, database_main_read_only);
-    //TODO: Comment this out
-    //printf("%s\n", database_name);
 
+    // Store the name in database object
     database->name = database_name;
 
+    // Get database table count and store in database_table_count variable
     int8_t database_table_count = get_database_table_count(database_main_read_only, database_name_len+1);
-    //printf("%d\n", database_table_count);
 
+    // Store the table count in database object
     database->table_count = database_table_count;
 
     int32_t cum_offset = database_name_len+2;
@@ -102,6 +112,9 @@ struct Database* database_init(void)
         char* tff = get_database_tff(database_main_read_only, cum_offset, len);
         printf("%s\n", tff);
         cum_offset += len+1;
+        int16_t row_offset_id = get_database_row_offset_id(database_main_read_only, cum_offset);
+        printf("%d\n", row_offset_id);
+        cum_offset += 2;
     }
 
     return database;
