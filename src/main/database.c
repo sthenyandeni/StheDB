@@ -1,4 +1,6 @@
 #include "database.h"
+#define MAIN_SDM "main.sdm"
+#define FILE_START_OFFSET 0
 
 int8_t get_database_name_length(FILE* database_main, int offset)
 {
@@ -72,11 +74,11 @@ char* get_database_tff(FILE* database_main, int offset, int length)
 
 struct Database* database_init(void)
 {
-    FILE* database_main_read_only = fopen("main.sdm", "r");
+    FILE* database_main_read_only = fopen(MAIN_SDM, "r");
     struct Database* database = malloc(sizeof(struct Database));
     database->head = NULL;
     
-    int8_t database_name_len = get_database_name_length(database_main_read_only, 0);
+    int8_t database_name_len = get_database_name_length(database_main_read_only, FILE_START_OFFSET);
     char* database_name = malloc(database_name_len);
     fread(database_name, 1, database_name_len, database_main_read_only);
     //TODO: Comment this out
