@@ -1,6 +1,8 @@
 #include "database.h"
 #define MAIN_SDM "main.sdm"
 #define FILE_START_OFFSET 0
+#define NULL_OFFSET 1
+#define FILE_ID_OFFSET 2
 
 int8_t get_database_name_length(FILE* database_main, int offset)
 {
@@ -108,14 +110,14 @@ struct Database* database_init(void)
         int8_t len = get_database_table_name_length(database_main_read_only, cum_offset);
         char* table_name = get_database_table_name(database_main_read_only, cum_offset, len);
         printf("%s\n", table_name);
-        cum_offset += len+1;
+        cum_offset += len + NULL_OFFSET;
         len = get_database_tff_length(database_main_read_only, cum_offset);
         char* tff = get_database_tff(database_main_read_only, cum_offset, len);
         printf("%s\n", tff);
-        cum_offset += len+1;
+        cum_offset += len + NULL_OFFSET;
         int16_t row_offset_id = get_database_row_offset_id(database_main_read_only, cum_offset);
         printf("%d\n", row_offset_id);
-        cum_offset += 2;
+        cum_offset += FILE_ID_OFFSET;
     }
 
     return database;
