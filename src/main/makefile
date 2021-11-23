@@ -1,5 +1,5 @@
 all:
-	gcc -c *.c
+	gcc -c -g *.c
 
 main: all
 	gcc -o main *.o

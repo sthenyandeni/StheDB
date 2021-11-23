@@ -13,6 +13,7 @@ struct Table {
     char* name;
     struct Attribute** attributes;
     int attr_count;
+    int offset_file_id;
 };
 
 struct TableListNode {

@@ -1,9 +1,10 @@
 #include "table.h"
 
-struct Table* init_table(char* filename, char* name) {
+struct Table* init_table(char* filename, char* name, int16_t offset_file_id) {
     FILE* table_format = fopen(filename, "r");
     struct Table* table = malloc(sizeof(struct Table));
     table->name = name;
+    table->offset_file_id = offset_file_id;
 
     fseek(table_format, 0, SEEK_SET);
     int8_t attr_count = fgetc(table_format);
@@ -27,7 +28,6 @@ struct Table* init_table(char* filename, char* name) {
         int16_t attribute_size = fgetc(table_format);
         attribute->size = attribute_size;
         
-
         table->attributes[i] = attribute;
     }
 
