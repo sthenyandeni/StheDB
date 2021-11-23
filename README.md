@@ -19,9 +19,13 @@
 | Offset | Length | Meaning | Example |
 | ------ | ------ | ------- | ------- |
 | 0000 | 5 | Name of database | 0x7374686500 ("sthe\0") |
-| 0005 | 1 | Number of tables | 0x01 (1) |
+| 0005 | 1 | Number of tables | 0x02 (2) |
 | 0006 | 6 | Table name | 0x757365727300 ("users\0") |
 | 000c | 10 | Table Format File name | 0x75736572732e73746600 ("users.stf\0) |
+| 0016 | 2 | Row Offset File ID | 0x0001 (1) |
+| 0018 | 6 | Table name | 0x757365727300 ("users\0") |
+| 001e | 10 | Table Format File name | 0x75736572732e73746600 ("users.stf\0) |
+| 0028 | 2 | Row Offset File ID | 0x0001 (1) |
 
 ## .stf File
 
