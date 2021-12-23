@@ -8,7 +8,7 @@ run: main
 	./main
 
 print_select:
-	yasm -f macho64 -o asm.o print_select.asm
+	yasm -f elf64 -g dwarf2 -o asm.o print_select.asm
 
 clean:
 	rm -f *.o main
