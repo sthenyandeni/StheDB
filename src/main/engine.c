@@ -10,12 +10,33 @@ int64_t swap_int64( int64_t val )
     return (val << 32) | ((val >> 32) & 0xFFFFFFFFULL);
 }
 
+void print_void_value(void* value, int length, int8_t print_0) {
+    for (int j = 0; j < length; j++) {
+        uint8_t c = ((uint8_t*)value)[j];
+        if (c == '\0' && !print_0) {
+            continue;
+        }
+        printf("%02x", c);
+    }
+    printf("\n");
+}
+
 FILE* get_offset_file(struct Table* t) {
     int id = t->offset_file_id;
     int id_len = (int)((ceil(log10(id)) + 1) * sizeof(char));
     char str[id_len+4];
     sprintf(str, "%d", id);
     strcat(str, ".sro");
+    FILE* f = fopen(str, "r");
+    return f;
+}
+
+FILE* get_data_file(struct Table* t) {
+    int id = t->offset_file_id;
+    int id_len = (int)((ceil(log10(id)) + 1) * sizeof(char));
+    char str[id_len+4];
+    sprintf(str, "%d", id);
+    strcat(str, ".srd");
     FILE* f = fopen(str, "r");
     return f;
 }
@@ -29,19 +50,100 @@ int get_record_size(struct Table* t)
     return size;
 }
 
-void select(struct Database* db, char* table) {
+void** select_raw(struct Database* db, char* table) {
+    struct Table* t = get_table_from_name(db, table);
+    if (t == NULL) {
+        printf("Table %s not found\n", table);
+        return NULL;
+    }
+    
+    int SINGLE_RECORD_SIZE = get_record_size(t);
+
+    FILE* offset_file = get_offset_file(t);
+    fseek(offset_file, 0, SEEK_END);
+    int64_t offset_file_size = ftell(offset_file);
+    fseek(offset_file, CONTENT_OFFSET, SEEK_SET);
+
+    FILE* data_file = get_data_file(t);
+
+    int record_count = 0;
+    void** records = malloc(0);
+    
+    int64_t current_file_offset = CONTENT_OFFSET;
+    while (current_file_offset < offset_file_size) {
+        int64_t current_record_offset = 0;
+        void* record = malloc(SINGLE_RECORD_SIZE);
+
+        for (int i = 0; current_record_offset < SINGLE_RECORD_SIZE; i++) {
+            int attr_size = t->attributes[i]->size;
+            // printf("Attribute size: %d\n", attr_size);
+            // printf("Current record offset: %lld\n", current_record_offset);
+
+            // Get row and attribute offset for srd file
+            int64_t file_offset = 0;
+            fread(&file_offset, sizeof(int64_t), 1, offset_file);
+            file_offset = swap_int64(file_offset);
+            
+            // Get value from srd file using offset
+            fseek(data_file, file_offset, SEEK_SET);
+            void* value = malloc(attr_size);
+            fread(value, attr_size, 1, data_file);
+
+            //print_void_value(value, attr_size);
+            for (int j = 0; j < attr_size; j++) {
+                ((uint8_t*)record)[current_record_offset + j] = ((uint8_t*)value)[j];
+            }
+
+            current_record_offset += attr_size;
+            current_file_offset += sizeof(int64_t);
+        }
+        record_count++;
+        records = realloc(records, record_count * sizeof(void*));
+        records[record_count - 1] = record;
+
+        // printf("Done with row\n");
+        // print_void_value(record, SINGLE_RECORD_SIZE);
+        // printf("Current file offset: %lld\n\n", current_file_offset);
+    }
+    return records;
+}
+
+void print_select_c(char* table, struct Database* db, void** select_data, int record_count) {
     struct Table* t = get_table_from_name(db, table);
     if (t == NULL) {
         printf("Table %s not found\n", table);
         return;
     }
-    
-    FILE* offset_file = get_offset_file(t);
-    fseek(offset_file, CONTENT_OFFSET, SEEK_SET);
 
-    int record_size = get_record_size(t);
+    // For each record...
+    for (int i = 0; i < record_count; i++) {
+        void* record = select_data[i];
+        int attr_count = t->attr_count;
+        //print_void_value(record, 464, 1);
+        //printf("\n");
 
-    int64_t row_1_attr_1_offset = 0;
-    fread(&row_1_attr_1_offset, sizeof(int64_t), 1, offset_file);
-    row_1_attr_1_offset = swap_int64(row_1_attr_1_offset);
+        // For each attribute...
+        for (int j = 0; j < attr_count; j++) {
+            struct Attribute* attr = t->attributes[j];
+            int offset = attr->record_offset;
+            int size = attr->size;
+            printf("Size of attr %d: %d\n", j+1, size);
+            ATTR_TYPE type = attr->type;
+
+            if (type == VARCHAR) {
+                char* str = malloc(sizeof(char) * size);
+                for (int k = 0; k < size; k++) {
+                    // uint8_t c = ((uint8_t*)record)[offset+k];
+                    char c = ((char*)record)[offset + k];
+                    //char* c = record + offset + k;
+                    //printf("\n%c", c);
+                    //strcat(str, &c);
+                    str[k] = c;
+                }
+                str[size] = '\0';
+                printf("String: %s\n", str);
+                // printf("\nString: %s\n", str);
+            }
+        }
+    }
 }

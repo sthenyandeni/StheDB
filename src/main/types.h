@@ -7,6 +7,7 @@ struct Attribute {
     char* name;
     ATTR_TYPE type;
     int size;
+    int record_offset;
 };
 
 struct Table {

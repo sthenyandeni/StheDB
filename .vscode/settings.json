@@ -1,5 +1,8 @@
 {
     "files.associations": {
-        "types.h": "c"
+        "types.h": "c",
+        "engine.h": "c",
+        "database.h": "c",
+        "string.h": "c"
     }
 }

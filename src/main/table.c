@@ -14,6 +14,7 @@ struct Table* init_table(char* filename, char* name, int16_t offset_file_id) {
     //Ideally, this line would not be necessary
     //TODO: Explore storing everything in hash tables
     fseek(table_format, 1, SEEK_SET);
+    int cumulative_offset = 0;
     for (int i = 0; i < attr_count; i++) {
         struct Attribute* attribute = malloc(sizeof(struct Attribute));
 
@@ -27,6 +28,9 @@ struct Table* init_table(char* filename, char* name, int16_t offset_file_id) {
 
         int16_t attribute_size = fgetc(table_format);
         attribute->size = attribute_size;
+
+        attribute->record_offset = cumulative_offset;
+        cumulative_offset += attribute_size;
         
         table->attributes[i] = attribute;
     }
