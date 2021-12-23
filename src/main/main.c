@@ -20,6 +20,6 @@ int main(int argc, char const *argv[])
     //void** data = select_raw(db, "users");
     //print_select("users", db, data, 2);
 
-    printf("Size: %d", sizeof(struct Attribute));
+    printf("Size: %ld", sizeof(struct Attribute));
     return 0;
 }

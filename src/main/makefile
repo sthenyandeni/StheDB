@@ -2,7 +2,7 @@ all:
 	gcc -c -g *.c
 
 main: all print_select
-	gcc -m64 -o main *.o
+	gcc -o main *.o
 
 run: main
 	./main

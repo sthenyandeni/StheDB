@@ -12,7 +12,7 @@ int64_t swap_int64( int64_t val )
 
 void print_void_value(void* value, int length, int8_t print_0) {
     for (int j = 0; j < length; j++) {
-        uint8_t c = ((uint8_t*)value)[j];
+        u_int8_t c = ((u_int8_t*)value)[j];
         if (c == '\0' && !print_0) {
             continue;
         }
@@ -91,7 +91,7 @@ void** select_raw(struct Database* db, char* table) {
 
             //print_void_value(value, attr_size);
             for (int j = 0; j < attr_size; j++) {
-                ((uint8_t*)record)[current_record_offset + j] = ((uint8_t*)value)[j];
+                ((u_int8_t*)record)[current_record_offset + j] = ((u_int8_t*)value)[j];
             }
 
             current_record_offset += attr_size;

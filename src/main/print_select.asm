@@ -34,14 +34,14 @@ _print_select:
     mov [rsp + 8], rsi ; struct Database* db
     mov [rsp + 16], rdx ; void** select_data
     mov [rsp + 24], ecx ; int record_count
-    mov [rsp + 28], 0
+    mov [rsp + 28], dword 0
 
-    mov rdi, [rsp + 8]
-    mov rsi, [rsp]
+    mov rdi, [rsp + 8] ; rdi <-- struct Database* db
+    mov rsi, [rsp] ; rsi <-- char* table 
     call get_table_from_name
     mov [rsp + 28], rax
 
-    cmp [rsp + 28], 0
+    cmp dword [rsp + 28], 0
     je _table_not_found
 
 _table_not_found:
