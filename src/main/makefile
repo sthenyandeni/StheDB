@@ -5,7 +5,7 @@
 # 	gcc -o main *.o
 
 main:
-	gcc -no-pie -g -o main *.c *.o -lm
+	gcc -g -o main *.c -lm
 
 run: main
 	./main

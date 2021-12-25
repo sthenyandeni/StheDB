@@ -2,8 +2,6 @@
 #include "table.h"
 #include "engine.h"
 
-extern int print_select();
-
 int main(int argc, char const *argv[])
 {
     struct Database* db =  database_init();
@@ -18,7 +16,7 @@ int main(int argc, char const *argv[])
     // }
 
     void** data = select_raw(db, "users");
-    print_select_c("users", db, data, 2);
+    print_select("users", db, data, 2);
 
     return 0;
 }

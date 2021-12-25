@@ -108,7 +108,7 @@ void** select_raw(struct Database* db, char* table) {
     return records;
 }
 
-void print_select_c(char* table, struct Database* db, void** select_data, int record_count) {
+void print_select(char* table, struct Database* db, void** select_data, int record_count) {
     struct Table* t = get_table_from_name(db, table);
     if (t == NULL) {
         printf("Table %s not found\n", table);
@@ -120,8 +120,6 @@ void print_select_c(char* table, struct Database* db, void** select_data, int re
         printf("\nPrinting record %d...\n", i + 1);
         void* record = select_data[i];
         int attr_count = t->attr_count;
-        //print_void_value(record, 464, 1);
-        //printf("\n");
 
         // For each attribute...
         printf("Printing attributes...\n");
@@ -141,14 +139,23 @@ void print_select_c(char* table, struct Database* db, void** select_data, int re
                     strcat(str, c);
                 }
                 str[size] = '\0';
-                //printf("String: %s\n", str);
                 printf("Attribute %d (%s, %d bytes, %d): %s\n", j + 1, attr->name, size, type, str);
             }
             else if (type == INTEGER) {
-                
+                char *strvalue = malloc(sizeof(unsigned char) * size);
+                for (int k = 0; k < size; k++) {
+                    char *c = malloc(sizeof(char) * 2);
+                    c[0] = ((char*)record)[offset + k];
+                    c[1] = '\0';
+                    strcat(strvalue, c);
+                }
+                int val = *((int*)strvalue);
+                printf("Attribute %d (%s, %d bytes, %d): %d\n", j + 1, attr->name, size, type, val);
             }
             else if (type == BOOLEAN) {
-
+                u_int8_t val = 0;
+                val = ((u_int8_t*)record)[offset];
+                printf("Attribute %d (%s, %d byte, %d): %d\n", j + 1, attr->name, size, type, val);
             }
         }
     }
