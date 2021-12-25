@@ -76,8 +76,6 @@ void** select_raw(struct Database* db, char* table) {
 
         for (int i = 0; current_record_offset < SINGLE_RECORD_SIZE; i++) {
             int attr_size = t->attributes[i]->size;
-            // printf("Attribute size: %d\n", attr_size);
-            // printf("Current record offset: %lld\n", current_record_offset);
 
             // Get row and attribute offset for srd file
             int64_t file_offset = 0;
@@ -100,10 +98,6 @@ void** select_raw(struct Database* db, char* table) {
         record_count++;
         records = realloc(records, record_count * sizeof(void*));
         records[record_count - 1] = record;
-
-        // printf("Done with row\n");
-        // print_void_value(record, SINGLE_RECORD_SIZE);
-        // printf("Current file offset: %lld\n\n", current_file_offset);
     }
     return records;
 }
@@ -159,4 +153,8 @@ void print_select(char* table, struct Database* db, void** select_data, int reco
             }
         }
     }
+}
+
+void insert(struct Database* db, char* table, void** attributes, void** values) {
+    
 }
