@@ -134,9 +134,11 @@ void print_select_c(char* table, struct Database* db, void** select_data, int re
             if (type == VARCHAR) {
                 char* str = malloc((sizeof(char) * size) + 1);
                 for (int k = 0; k < size; k++) {
-                    char c = ((char*)record)[offset + k];
-                    if (c == '\0') continue;
-                    strcat(str, &c);
+                    char *c = malloc(sizeof(char) * 2);
+                    c[0] = ((char*)record)[offset + k];
+                    c[1] = '\0';
+                    if (c[0] == '\0') continue;
+                    strcat(str, c);
                 }
                 str[size] = '\0';
                 //printf("String: %s\n", str);
