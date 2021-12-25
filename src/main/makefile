@@ -1,8 +1,11 @@
-all:
-	gcc -c -g *.c
+# all:
+# 	gcc -Wall -c -g *.c -lm
 
-main: all print_select
-	gcc -o main *.o
+#  main: all print_select
+# 	gcc -o main *.o
+
+main: print_select
+	gcc -no-pie -g -o main *.c *.o -lm
 
 run: main
 	./main

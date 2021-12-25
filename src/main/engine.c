@@ -114,35 +114,39 @@ void print_select_c(char* table, struct Database* db, void** select_data, int re
         printf("Table %s not found\n", table);
         return;
     }
-
+    printf("Printing records...\n");
     // For each record...
     for (int i = 0; i < record_count; i++) {
+        printf("\nPrinting record %d...\n", i + 1);
         void* record = select_data[i];
         int attr_count = t->attr_count;
         //print_void_value(record, 464, 1);
         //printf("\n");
 
         // For each attribute...
+        printf("Printing attributes...\n");
         for (int j = 0; j < attr_count; j++) {
             struct Attribute* attr = t->attributes[j];
             int offset = attr->record_offset;
             int size = attr->size;
-            printf("Size of attr %d: %d\n", j+1, size);
             ATTR_TYPE type = attr->type;
 
             if (type == VARCHAR) {
-                char* str = malloc(sizeof(char) * size);
+                char* str = malloc((sizeof(char) * size) + 1);
                 for (int k = 0; k < size; k++) {
-                    // uint8_t c = ((uint8_t*)record)[offset+k];
                     char c = ((char*)record)[offset + k];
-                    //char* c = record + offset + k;
-                    //printf("\n%c", c);
-                    //strcat(str, &c);
-                    str[k] = c;
+                    if (c == '\0') continue;
+                    strcat(str, &c);
                 }
                 str[size] = '\0';
-                printf("String: %s\n", str);
-                // printf("\nString: %s\n", str);
+                //printf("String: %s\n", str);
+                printf("Attribute %d (%s, %d bytes, %d): %s\n", j + 1, attr->name, size, type, str);
+            }
+            else if (type == INTEGER) {
+                
+            }
+            else if (type == BOOLEAN) {
+
             }
         }
     }

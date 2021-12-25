@@ -17,9 +17,8 @@ int main(int argc, char const *argv[])
     //     printf("Attr type %d: %d\n", i, table->attributes[i]->type);
     // }
 
-    //void** data = select_raw(db, "users");
-    //print_select("users", db, data, 2);
+    void** data = select_raw(db, "users");
+    print_select_c("users", db, data, 2);
 
-    printf("Size: %ld", sizeof(struct Attribute));
     return 0;
 }

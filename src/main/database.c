@@ -160,14 +160,11 @@ struct Database* database_init(void)
     for (int i = 0; i < database_table_count; i++) {
         int8_t len = get_database_table_name_length(database_main_read_only, cum_offset);
         char* table_name = get_database_table_name(database_main_read_only, cum_offset, len+1);
-        printf("%s\n", table_name);
         cum_offset += len + NULL_OFFSET;
         len = get_database_tff_length(database_main_read_only, cum_offset);
         char* tff = get_database_tff(database_main_read_only, cum_offset, len+1);
-        printf("%s\n", tff);
         cum_offset += len + NULL_OFFSET;
         int16_t row_offset_id = get_database_row_offset_id(database_main_read_only, cum_offset);
-        printf("%d\n", row_offset_id);
         cum_offset += FILE_ID_OFFSET;
 
         struct Table* table = init_table(tff, table_name, row_offset_id);
