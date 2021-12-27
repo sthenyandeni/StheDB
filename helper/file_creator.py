@@ -7,7 +7,7 @@ if len(sys.argv) != 3:
 input_file_name = sys.argv[1]
 output_file_name = sys.argv[2]
 
-file = open(f'./helper/{input_file_name}', 'r')
+file = open(f'./{input_file_name}', 'r')
 raw_text = file.read()
 file.close()
 raw_byte_array = [raw_text[i:i+2] for i in range(0, len(raw_text), 2)]
@@ -17,5 +17,5 @@ for i in raw_byte_array:
 print(byte_array)
 byte_string = b''.join(byte_array)
 
-new_file = open(f'./helper/{output_file_name}', 'wb')
+new_file = open(f'./{output_file_name}', 'wb')
 new_file.write(byte_string)

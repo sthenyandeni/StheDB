@@ -72,6 +72,7 @@
 ### Content (by example)
 
 There is a 64 byte header
+Values are big-endian
 
 | Offset | Length | Meaning | Example |
 | ------ | ------ | ------- | ------- |
@@ -81,16 +82,16 @@ There is a 64 byte header
 | 0004 | 60 | Padding | 0x000000000000000000000000000000000000000000000000000000000000<br/>000000000000000000000000000000000000000000000000000000000000
 | END HEADER |
 | START CONTENT |
-| 0040 | 8 | Offset of row 1 attribute 1 | 0x0000000000000040 (64) |
-| 0048 | 8 | Offset of row 1 attriubte 2 | 0x0000000000000048 (72) |
-| 0050 | 8 | Offset of row 1 attribute 3 | 0x000000000000037b (891) |
-| 0058 | 8 | Offset of row 1 attribute 4 | 0x00000000000000ac (172) |
-| 0060 | 8 | Offset of row 1 attribute 5 | 0x000000000000020f (527) |
-| 0068 | 8 | Offset of row 2 attribute 1 | 0x0000000000000210 (528) |
-| 0070 | 8 | Offset of row 2 attribute 2 | 0x00000000000001ab (427) |
-| 0078 | 8 | Offset of row 2 attribute 3 | 0x0000000000000317 (791) |
-| 0080 | 8 | Offset of row 2 attribute 4 | 0x0000000000000218 (536) |
-| 0088 | 8 | Offset of row 2 attribute 5 | 0x00000000000003df (991) |
+| 0040 | 8 | Offset of row 1 attribute 1 | 0x4000000000000000 (64) |
+| 0048 | 8 | Offset of row 1 attriubte 2 | 0x4800000000000000 (72) |
+| 0050 | 8 | Offset of row 1 attribute 3 | 0x7b03000000000000 (891) |
+| 0058 | 8 | Offset of row 1 attribute 4 | 0xac00000000000000 (172) |
+| 0060 | 8 | Offset of row 1 attribute 5 | 0x0f02000000000000 (527) |
+| 0068 | 8 | Offset of row 2 attribute 1 | 0x1002000000000000 (528) |
+| 0070 | 8 | Offset of row 2 attribute 2 | 0xab01000000000000 (427) |
+| 0078 | 8 | Offset of row 2 attribute 3 | 0x1703000000000000 (791) |
+| 0080 | 8 | Offset of row 2 attribute 4 | 0x1802000000000000 (536) |
+| 0088 | 8 | Offset of row 2 attribute 5 | 0xdf03000000000000 (991) |
 
 
 
