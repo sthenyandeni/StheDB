@@ -5,6 +5,7 @@
 # 	gcc -o main *.o
 
 main:
+	cp ./original/* ./
 	gcc -g -o main *.c -lm
 
 run: main
