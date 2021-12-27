@@ -21,23 +21,23 @@ void print_void_value(void* value, int length, int8_t print_0) {
     printf("\n");
 }
 
-FILE* get_offset_file(struct Table* t) {
+FILE* get_offset_file(struct Table* t, const char* flag) {
     int id = t->offset_file_id;
     int id_len = (int)((ceil(log10(id)) + 1) * sizeof(char));
     char str[id_len+4];
     sprintf(str, "%d", id);
     strcat(str, ".sro");
-    FILE* f = fopen(str, "r");
+    FILE* f = fopen(str, flag);
     return f;
 }
 
-FILE* get_data_file(struct Table* t) {
+FILE* get_data_file(struct Table* t, const char* flag) {
     int id = t->offset_file_id;
     int id_len = (int)((ceil(log10(id)) + 1) * sizeof(char));
     char str[id_len+4];
     sprintf(str, "%d", id);
     strcat(str, ".srd");
-    FILE* f = fopen(str, "r");
+    FILE* f = fopen(str, flag);
     return f;
 }
 
@@ -50,6 +50,16 @@ int get_record_size(struct Table* t)
     return size;
 }
 
+struct Attribute* get_attribute(struct Table* t, char* name)
+{
+    for (int i = 0; i < t->attr_count; i++) {
+        if (strcmp(t->attributes[i]->name, name) == 0) {
+            return t->attributes[i];
+        }
+    }
+    return NULL;
+}
+
 void** select_raw(struct Database* db, char* table) {
     struct Table* t = get_table_from_name(db, table);
     if (t == NULL) {
@@ -59,12 +69,12 @@ void** select_raw(struct Database* db, char* table) {
     
     int SINGLE_RECORD_SIZE = get_record_size(t);
 
-    FILE* offset_file = get_offset_file(t);
+    FILE* offset_file = get_offset_file(t, "r");
     fseek(offset_file, 0, SEEK_END);
     int64_t offset_file_size = ftell(offset_file);
     fseek(offset_file, CONTENT_OFFSET, SEEK_SET);
 
-    FILE* data_file = get_data_file(t);
+    FILE* data_file = get_data_file(t, "r");
 
     int record_count = 0;
     void** records = malloc(0);
@@ -80,7 +90,7 @@ void** select_raw(struct Database* db, char* table) {
             // Get row and attribute offset for srd file
             int64_t file_offset = 0;
             fread(&file_offset, sizeof(int64_t), 1, offset_file);
-            file_offset = swap_int64(file_offset);
+            // file_offset = swap_int64(file_offset);
             
             // Get value from srd file using offset
             fseek(data_file, file_offset, SEEK_SET);
@@ -99,6 +109,8 @@ void** select_raw(struct Database* db, char* table) {
         records = realloc(records, record_count * sizeof(void*));
         records[record_count - 1] = record;
     }
+    fclose(offset_file);
+    fclose(data_file);
     return records;
 }
 
@@ -155,6 +167,48 @@ void print_select(char* table, struct Database* db, void** select_data, int reco
     }
 }
 
-void insert(struct Database* db, char* table, void** attributes, void** values) {
-    
+
+// Insert a single record into the table
+void insert_single(struct Database* db, char* table, int count, char** attributes, void** values) {
+    struct Table *t = get_table_from_name(db, table);
+    if (t == NULL) {
+        printf("Table %s not found\n", table);
+        return;
+    }
+
+    // Get last offset in srd file
+    FILE* data_file = get_data_file(t, "a+");
+    FILE* offset_file = get_offset_file(t, "a+");
+
+    // For each attribute being added to a new record
+    for(int i = 0; i < count; i++) {
+        struct Attribute* attr = get_attribute(t, attributes[i]);
+        if (attr == NULL) {
+            printf("Attribute %s not found\n", attributes[i]);
+            return;
+        }
+        
+        fseek(data_file, 0, SEEK_END);
+        int64_t data_file_offset_start = ftell(data_file);
+
+        // Write attribute value to srd file
+        void* value = values[i];
+        if (attr->type == VARCHAR) {
+            int length = strlen((char*)value);
+            if (length > MAX_VARCHAR_LENGTH) length = MAX_VARCHAR_LENGTH;
+            for (int j = 0; j < attr->size - length; j++) fwrite(NIL, sizeof(char), 1, data_file);
+            fwrite(value, sizeof(char), length, data_file);
+        }
+        else if (attr->type == BOOLEAN) {
+            fwrite(value, sizeof(u_int8_t), 1, data_file);
+        }
+        else if (attr->type == INTEGER) {
+            // TODO: Complete the INTEGER INVESTIGATION HERE
+        }
+
+        fwrite(&data_file_offset_start, sizeof(int64_t), 1, offset_file);
+    }
+
+    fclose(data_file);
+    fclose(offset_file);
 }
