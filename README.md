@@ -3,6 +3,11 @@
 #### The greatest database engine to ever exist  
 <br/>
 
+## Notes
+- ```INTEGER``` data should be stored in an ```int64_t``` variable where its reference is stored in a ```void*``` variable.
+
+<br/>
+
 ## Types
 ### All types are nullable
 
