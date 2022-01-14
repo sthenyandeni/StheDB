@@ -169,12 +169,14 @@ void print_select(char* table, struct Database* db, void** select_data, int reco
 
 
 // Insert a single record into the table
-void insert_single(struct Database* db, char* table, int count, char** attributes, void** values) {
+void insert_single(struct Database* db, char* table, char** attributes, void** values) {
     struct Table *t = get_table_from_name(db, table);
     if (t == NULL) {
         printf("Table %s not found\n", table);
         return;
     }
+
+    int count = t->attr_count;
 
     // Get last offset in srd file
     FILE* data_file = get_data_file(t, "a+");
@@ -203,7 +205,7 @@ void insert_single(struct Database* db, char* table, int count, char** attribute
             fwrite(value, sizeof(u_int8_t), 1, data_file);
         }
         else if (attr->type == INTEGER) {
-            // TODO: Complete the INTEGER INVESTIGATION HERE
+            fwrite(value, sizeof(int64_t), 1, data_file);
         }
 
         fwrite(&data_file_offset_start, sizeof(int64_t), 1, offset_file);
