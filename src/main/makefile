@@ -1,12 +1,13 @@
-# all:
-# 	gcc -Wall -c -g *.c -lm
-
-#  main: all print_select
-# 	gcc -o main *.o
-
-main:
+all:
 	cp ./original/* ./
-	gcc -g -o main *.c -lm
+	gcc -Wall -c -g *.c -lm
+
+ main: all
+	gcc -o main *.o
+
+# main:
+# 	cp ./original/* ./
+# 	gcc -g -o main *.c -lm
 
 run: main
 	./main
