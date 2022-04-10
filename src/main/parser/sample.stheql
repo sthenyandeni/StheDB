@@ -1,0 +1,2 @@
+FROM users SELECT * WHERE name == "Sthe" AND age > 10.0;
+INSERT users (name, age) VALUES ("Me", 13);

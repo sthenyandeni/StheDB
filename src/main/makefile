@@ -12,13 +12,6 @@ all:
 run: main
 	./main
 
-parser:
-	cd parser
-	rm -f *.o main
-	gcc -Wall -c -g *.c
-	gcc -o main *.o
-	cd ..
-	./main
 
 # print_select:
 # 	yasm -f elf64 -g dwarf2 -o asm.o print_select.asm
