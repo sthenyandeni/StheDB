@@ -7,6 +7,7 @@ const char* get_token_type_name(TOKEN_TYPE token_type) {
         case STRINGLITERAL: return "STRINGLITERAL";
         case INTEGERLITERAL: return "INTEGERLITERAL";
         case FLOATLITERAL: return "FLOATLITERAL";
+        case BOOLEANLITERAL: return "BOOLEANLITERAL";
         case COLON: return "COLON";
         case SEMICOLON: return "SEMICOLON";
         case COMMA: return "COMMA";
@@ -19,11 +20,14 @@ const char* get_token_type_name(TOKEN_TYPE token_type) {
         case GE: return "GE";
         case AND: return "AND";
         case OR: return "OR";
+        case LIKE: return "LIKE";
         case OPENBRACKET: return "OPENBRACKET";
         case CLOSEDBRACKET: return "CLOSEDBRACKET";
         case DOT: return "DOT";
         case SELECT: return "SELECT";
         case INSERT: return "INSERT";
+        case DELETE: return "DELETE";
+        case UPDATE: return "UPDATE";
         case FROM: return "FROM";
         case WHERE: return "WHERE";
         case VALUES: return "VALUES";

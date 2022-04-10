@@ -9,6 +9,7 @@ typedef enum TOKEN_TYPE {
     STRINGLITERAL,
     INTEGERLITERAL,
     FLOATLITERAL,
+    BOOLEANLITERAL,
     COLON,
     SEMICOLON,
     COMMA,
@@ -21,11 +22,14 @@ typedef enum TOKEN_TYPE {
     GE, // Greater than or equal to
     AND,
     OR,
+    LIKE
     OPENBRACKET,
     CLOSEDBRACKET,
     DOT,
     SELECT,
     INSERT,
+    DELETE,
+    UPDATE,
     FROM,
     WHERE,
     VALUES
