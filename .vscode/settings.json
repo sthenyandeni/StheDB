@@ -3,6 +3,10 @@
         "types.h": "c",
         "engine.h": "c",
         "database.h": "c",
-        "string.h": "c"
+        "string.h": "c",
+        "stdlib.h": "c",
+        "cstring": "c",
+        "locale": "c",
+        "parser.h": "c"
     }
 }
