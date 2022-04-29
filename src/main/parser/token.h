@@ -22,7 +22,7 @@ typedef enum TOKEN_TYPE {
     GE, // Greater than or equal to
     AND,
     OR,
-    LIKE
+    LIKE,
     OPENBRACKET,
     CLOSEDBRACKET,
     DOT,
